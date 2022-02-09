@@ -1,1 +1,1 @@
-Ciao
+Il file database.js effettua una connessione al database e restituisce la variabile db che permetterà di eseguire delle query

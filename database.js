@@ -1,8 +1,8 @@
-const {Db} = require('pg');
+const {Client} = require('pg');
 
 
 
-const db = new Db ({
+const db = new Client ({
     host: 'localhost',
     user: 'postgres',
     port: 5432, //questa è la porta di default di postres
