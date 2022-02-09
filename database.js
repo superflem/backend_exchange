@@ -1,25 +1,14 @@
-const {Client} = require('pg');
-
-
-
-const db = new Client ({
+"use strict";
+var Client = require('pg').Client;
+var db = new Client({
     host: 'localhost',
     user: 'postgres',
-    port: 5432, //questa è la porta di default di postres
+    port: 5432,
     password: 'giuseppe-28',
     database: 'exchange_db'
 });
-
-
-
-db.connect(err => {
+db.connect(function (err) {
     if (err)
         console.log(err);
 });
-
-
 module.exports = db;
-
-
-
-
