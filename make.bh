@@ -2,6 +2,8 @@ tsc --outDir ./ typescript/database.ts;  #compila il file database.ts
 
 tsc --outDir ./ typescript/server_users.ts;  #compila il file server_users.ts
 
+tsc --outDir ./ typescript/exchange.ts;  #compila il file exchange.ts
+
 tsc --outDir ./routes routes/typescript/deposit.ts;  #compila il file deposit.ts
 
 tsc --outDir ./routes routes/typescript/signup.ts;  #compila il file signup.ts
