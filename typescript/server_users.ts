@@ -17,3 +17,7 @@ app.use(withdraw);
 // deposit(nubmer value, string symbol)
 const deposit = require('./routes/deposit.js');
 app.use(deposit);
+
+// listTransactions(object filter)
+const listTransactions = require('./routes/listTransactions.js');
+app.use(listTransactions);

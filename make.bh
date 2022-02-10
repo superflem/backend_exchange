@@ -7,3 +7,5 @@ tsc --outDir ./routes routes/typescript/deposit.ts;  #compila il file deposit.ts
 tsc --outDir ./routes routes/typescript/signup.ts;  #compila il file signup.ts
 
 tsc --outDir ./routes routes/typescript/withdraw.ts;  #compila il file withdraw.ts
+
+tsc --outDir ./routes routes/typescript/listTransactions.ts;  #compila il file listTransactions.ts
