@@ -1,17 +1,18 @@
+declare function require(stringa:string);
 const express = require('express');
 const router = express.Router();
 const db = require('../database.js');
 
 // signup(string email, string password, string name, string iban)
 router.get('/signup', (req, res) => {
-    const email = 'alex.caraffi@hotmail.it';
-    const password = 'alexcaraffi';
-    const nome = 'alex';
-    const cognome = 'caraffi';
-    const iban = 'H69K184LD94LD629105Y463728X';
+    const email = 'daniela.campioli@hotmail.com';
+    const password = 'danielacampioli';
+    const nome = 'daniela';
+    const cognome = 'campioli';
+    const iban = 'H69K184UD94LD629105Y763728X';
 
     // questa query funziona
-    query = "INSERT INTO utente VALUES (DEFAULT, '"+nome+"', '"+cognome+"', '"+email+"', '"+password+"', '"+iban+"', 0, 0);"; //preparo la query di inserimento
+    let query = "INSERT INTO utente VALUES (DEFAULT, '"+nome+"', '"+cognome+"', '"+email+"', '"+password+"', '"+iban+"', 0, 0);"; //preparo la query di inserimento
 
     //query = 'select * from utente';
 
@@ -24,4 +25,4 @@ router.get('/signup', (req, res) => {
     });
 });
 
-module.exports = router;
+export = router;

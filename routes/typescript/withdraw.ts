@@ -1,3 +1,4 @@
+declare function require(stringa:string);
 const express = require('express');
 const router = express.Router();
 const db = require('../database.js');
@@ -5,8 +6,9 @@ const db = require('../database.js');
 // withdraw(number value, string symbol)  EUR o USD
 router.get('/withdraw', (req, res) => {
     const valore = 12;
-    const simbolo = 'USD';
     const utente = 2;
+    let simbolo = 'USD';
+    let valuta:string;
 
     //controllo la valuta
     if (simbolo == 'EUR')
@@ -27,7 +29,7 @@ router.get('/withdraw', (req, res) => {
     }
 
     //faccio questa query per controllare di stare depositando meno soldi di quanto ne possa depositare
-    queryControllo = 'SELECT '+valuta+' AS soldi FROM utente WHERE id_utente = '+utente+';';
+    const queryControllo = 'SELECT '+valuta+' AS soldi FROM utente WHERE id_utente = '+utente+';';
 
     //prima controllo che la somma da depositare sia inferiore dalla somma presente nel database
     db.query(queryControllo, (err, res) => {
@@ -41,7 +43,7 @@ router.get('/withdraw', (req, res) => {
             else //se ho abbastanza soldi, calcolo il nuovo valore e aggiorno il database
             {
                 const nuovoConto = vecchioConto - valore;
-                queryModifica = 'UPDATE utente SET '+valuta+' = '+nuovoConto+' WHERE id_utente = '+utente+';';
+                const queryModifica = 'UPDATE utente SET '+valuta+' = '+nuovoConto+' WHERE id_utente = '+utente+';';
                 db.query(queryModifica, (err, res) => {
                     if (err)
                         console.log(err.message);
@@ -53,4 +55,4 @@ router.get('/withdraw', (req, res) => {
     });
 });
 
-module.exports = router;
+export = router;

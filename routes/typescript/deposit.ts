@@ -1,3 +1,4 @@
+declare function require(stringa:string);
 const express = require('express');
 const router = express.Router();
 const db = require('../database.js');
@@ -5,8 +6,9 @@ const db = require('../database.js');
 // deposit(nubmer value, string symbol)
 router.get('/deposit', (req, res) => {
     const valore = 12;
-    const simbolo = 'USD';
     const utente = 2;
+    let simbolo = 'USD';
+    let valuta:string;
 
     //controllo la valuta
     if (simbolo == 'EUR')
@@ -27,7 +29,7 @@ router.get('/deposit', (req, res) => {
     }
 
     //faccio questa query per capire quanti soldi ho nel conto
-    queryVecchio = 'SELECT '+valuta+' AS soldi FROM utente WHERE id_utente = '+utente+';';
+    const queryVecchio = 'SELECT '+valuta+' AS soldi FROM utente WHERE id_utente = '+utente+';';
 
     db.query(queryVecchio, (err, res) => {
         if (err)
@@ -37,7 +39,7 @@ router.get('/deposit', (req, res) => {
             //aggiungo il valore appena trovato con quello in input
             const vecchio = res.rows[0].soldi;
             const nuovo = vecchio+valore;
-            queryAggiorna = 'UPDATE utente SET '+valuta+' = '+nuovo+' WHERE id_utente = '+utente+';';
+            const queryAggiorna = 'UPDATE utente SET '+valuta+' = '+nuovo+' WHERE id_utente = '+utente+';';
 
             db.query(queryAggiorna, (err, res) => {
                 if (err)
@@ -49,4 +51,4 @@ router.get('/deposit', (req, res) => {
     });
 });
 
-module.exports = router;
+export = router;
