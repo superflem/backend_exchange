@@ -10,9 +10,24 @@ https.get(url, res => {
     {
         data += chunk; //legge riga per riga il file
     });
-    res.on('end', () => { //viene trasformato in un formato leggibile e stampato
-        console.log(data);
-    })
+    res.on('end', () => { //viene trasformato in un formato stringa leggibile e stampato
+        //console.log(data);
+
+        
+        const xml2js = require ('xml2js');
+        const parser = new xml2js.Parser(); 
+
+        parser.parseString(data, (err, res) => { //trasformo la stringa in codice json
+            const stringaJson = JSON.stringify(res); //ottengo una stringa json
+
+            const json = JSON.parse(stringaJson);  //trasformo la stringa in un oggetto json
+
+            const cambio = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'][0]['$']['rate'];  //ottengo il cambio euro dollari
+            console.log(cambio);// primo tag   => primo cube => cube time => primo oggetto cube => rate
+        });
+        
+
+    });
 }).on('error', err => {
   console.log(err.message);
 });
