@@ -22,8 +22,21 @@ https.get(url, res => {
 
             const json = JSON.parse(stringaJson);  //trasformo la stringa in un oggetto json
 
-            const cambio = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'][0]['$']['rate'];  //ottengo il cambio euro dollari
-            console.log(cambio);// primo tag   => primo cube => cube time => primo oggetto cube => rate
+            //const cambio = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'][0]['$']['rate'];  //ottengo il cambio euro dollari
+            //console.log(cambio);// primo tag   => primo cube => cube time => primo oggetto cube => rate
+
+           const cambiValute = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'];
+           let cambio:number;
+           for (let i = 0; i < cambiValute.length; i++)
+           {
+               if (cambiValute[i]['$']['currency'] == 'USD')
+               {
+                    cambio = cambiValute[i]['$']['rate'];
+                   break;
+               }
+           }
+
+           console.log(cambio);
         });
         
 
