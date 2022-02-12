@@ -21,3 +21,7 @@ app.use(deposit);
 // listTransactions(object filter)
 const listTransactions = require('./routes/listTransactions.js');
 app.use(listTransactions);
+
+//buy(number value, string symbol)
+const buy = require('./routes/buy.js');
+app.use(buy);
