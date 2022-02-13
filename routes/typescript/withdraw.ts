@@ -1,7 +1,7 @@
 declare function require(stringa:string);
 const express = require('express');
 const router = express.Router();
-const db = require('../database.js');
+const db = require('../javascript/database.js');
 
 // withdraw(number value, string symbol)  EUR o USD
 router.get('/withdraw', (req, res) => {

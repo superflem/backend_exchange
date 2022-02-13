@@ -2,7 +2,7 @@ declare function require(name:string);
 
 const express = require ('express');
 const app = express();
-const db = require('./database.js');
+const db = require('./javascript/database.js');
 
 app.listen(9001); //i servizi degli utenti stanno sulla porta 9001
 

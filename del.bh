@@ -1,3 +1,5 @@
 rm *.js #rimuove i file javascript nella cartella attuale
 
 rm routes/*.js #rimuove i file javascript nella cartella attuale
+
+rm javascript/*.js #rimuove i file javascript nella cartella javascript

@@ -1,21 +1,43 @@
 declare function require(name:string);
 
-const express = require ('express');
-const app = express();
+const grpc = require("@grpc/grpc-js");
+const protoLoader = require("@grpc/proto-loader");
+const { promisify } = require("util");
+const packageDef = protoLoader.loadSync("../proto/valuta.proto", {}); //gli passo il file proto per la comunicazione
+const grpcObject = grpc.loadPackageDefinition(packageDef); //carico il package come oggetto
+const convertiPackage = grpcObject.convertiPackage;
 
-app.listen(9000); //il servizio dello scambio sta in ascolto sulla porta 9001
 
-app.get('/', (req, res) => { //contatto il server per ottenere il cambio euro dollaro e viceversa
-   
+const server = new grpc.Server(); //crea il server
+server.bindAsync = promisify(server.bindAsync); //lo fa asincrono
 
-    const utente = 2;
-    let from:string;
-    let to:string;
+
+server.bindAsync("0.0.0.0:9000", grpc.ServerCredentials.createInsecure()) //ascolta tutto (0.0.0.0) sulla porta 9000. creo un server insicuro.
+.then( () => {  // Di default http2 vuole delle credenziali, cosi facciamo senza
+
+    //cosa faccio una volta creato il server
+
+    server.addService(convertiPackage.ScambioValuta.service, { //aggiungo il servizio ScambioValuta del package convertiPackage al server
+        "converti": converti
+    }); //quello sopra è un oggetto json. il parametro tra virgolette è rpc del file proto, metre il secondo è la funzione qui sotto
+    server.start() //faccio partire il server
+
+    console.log("server in ascolto sulla porta 9000");
+
+}).catch(console.log); 
+                                                                       
+
+function converti (call, callback)
+{
+    const from = call.request['from'];
+    const to = call.request['to'];
+    const quantita_spesa = call.request['quantitaSpesa'];
+
     let verso:number;
 
-    from = 'EUR';
-    to = 'USD';
-    const quantita_spesa = 3;
+ 
+
+
 
     //controllo sul giusto cambio
     if (from == 'USD' && to == 'EUR')
@@ -42,23 +64,23 @@ app.get('/', (req, res) => { //contatto il server per ottenere il cambio euro do
     //leggo il file xml della bce    
     const https = require('https');
     const url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml?46f0dd7988932599cb1bcac79a10a16a"; //link della BCE
-    let data: string;
-    data = ''; //i dati che vengono presi dal file xml
+    let dati: string;
     let cambio:number;
+
+    dati = ''; //i dati che vengono presi dal file xml
 
     https.get(url, res => {
         res.on('data', chunk => 
         {
-            data += chunk; //legge riga per riga il file
+            dati += chunk; //legge riga per riga il file
         });
-        res.on('end', () => { //viene trasformato in un formato stringa leggibile e stampato
-            //console.log(data);
+        res.on('end', () => { //viene trasformato in un formato stringa leggibile 
 
             
             const xml2js = require ('xml2js');
             const parser = new xml2js.Parser(); 
 
-            parser.parseString(data, (err, res) => { //trasformo la stringa in codice json
+            parser.parseString(dati, (err, res) => { //trasformo la stringa in codice json
                 const stringaJson = JSON.stringify(res); //ottengo una stringa json
 
                 const json = JSON.parse(stringaJson);  //trasformo la stringa in un oggetto json
@@ -78,11 +100,15 @@ app.get('/', (req, res) => { //contatto il server per ottenere il cambio euro do
                     }
                 }
 
-                //console.log('dentro la funzione '+cambio);  
-                if (trovato)     
+                /*
+                if (trovato) //se trovo il tasso di cambio giusto, lo restituisco, altrimenti undefined     
                     return cambio;
                 else
                     return undefined;
+                */
+
+                if (!trovato) //se non trovo il tasso di cambio giusto, undefined     
+                    cambio = undefined;
             });    
         });
     }).on('error', err => {
@@ -90,34 +116,8 @@ app.get('/', (req, res) => { //contatto il server per ottenere il cambio euro do
     });
 
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  
-    //aspetto che il file venga letto del tutto per poi fare la richiesta al database
+    //aspetto che il file venga letto del tutto per poi rimandare al client il nuovo valore
     setTimeout(() => 
     {
         if (!cambio)
@@ -137,9 +137,16 @@ app.get('/', (req, res) => { //contatto il server per ottenere il cambio euro do
             quantita_comprata = quantita_spesa * cambio;
         }
 
-        console.log(quantita_comprata);
+        //console.log(quantita_comprata);
+
+        //invio al client
+        const output = 
+        {
+            'quantitaComprata': quantita_comprata.toFixed(2)
+        }
+
+        callback(null, output);
 
     }, 5000);
-    
 
-});
+}
