@@ -1,15 +1,15 @@
-tsc --outDir ./javascript typescript/database.ts;  #compila il file database.ts
+tsc --outDir ./build typescript/database.ts;  #compila il file database.ts
 
-tsc --outDir ./ typescript/server_users.ts;  #compila il file server_users.ts
+tsc --outDir ./build typescript/server_users.ts;  #compila il file server_users.ts
 
-tsc --outDir ./javascript typescript/exchange.ts;  #compila il file exchange.ts
+tsc --outDir ./build typescript/exchange.ts;  #compila il file exchange.ts
 
-tsc --outDir ./routes routes/typescript/deposit.ts;  #compila il file deposit.ts
+tsc --outDir ./build routes/deposit.ts;  #compila il file deposit.ts
 
-tsc --outDir ./routes routes/typescript/signup.ts;  #compila il file signup.ts
+tsc --outDir ./build routes/signup.ts;  #compila il file signup.ts
 
-tsc --outDir ./routes routes/typescript/withdraw.ts;  #compila il file withdraw.ts
+tsc --outDir ./build routes/withdraw.ts;  #compila il file withdraw.ts
 
-tsc --outDir ./routes routes/typescript/listTransactions.ts;  #compila il file listTransactions.ts
+tsc --outDir ./build routes/listTransactions.ts;  #compila il file listTransactions.ts
 
-tsc --outDir ./routes routes/typescript/buy.ts;  #compila il file buy.ts
+tsc --outDir ./build routes/buy.ts;  #compila il file buy.ts

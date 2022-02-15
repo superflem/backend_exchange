@@ -2,26 +2,26 @@ declare function require(name:string);
 
 const express = require ('express');
 const app = express();
-const db = require('./javascript/database.js');
+const db = require('./database.js');
 
 app.listen(9001); //i servizi degli utenti stanno sulla porta 9001
 
 // signup(string email, string password, string name, string iban)
-const signup = require('./routes/signup.js');
+const signup = require('./signup.js');
 app.use(signup);
 
 // withdraw(number value, string symbol)  EUR o USD
-const withdraw = require('./routes/withdraw.js');
+const withdraw = require('./withdraw.js');
 app.use(withdraw);
 
 // deposit(nubmer value, string symbol)
-const deposit = require('./routes/deposit.js');
+const deposit = require('./deposit.js');
 app.use(deposit);
 
 // listTransactions(object filter)
-const listTransactions = require('./routes/listTransactions.js');
+const listTransactions = require('./listTransactions.js');
 app.use(listTransactions);
 
 //buy(number value, string symbol)
-const buy = require('./routes/buy.js');
+const buy = require('./buy.js');
 app.use(buy);
