@@ -93,9 +93,6 @@ router.get('/buy', (req, res) => {
                         //se non ricevo errori, ottengo il valore cambiato di valuta e continuo con le interrogazioni al database
                         const quantita_comprata = Number(res['quantitaComprata'].toFixed(2));
 
-
-
-
                         const queryComprata = 'SELECT '+valuta_comprataStringa+' AS soldi FROM utente WHERE id_utente = '+utente+";";
                         db.query(queryComprata, (err, res) => { //guardo quanti soldi dell'altra valuta ho
                             if (err)
@@ -132,8 +129,6 @@ router.get('/buy', (req, res) => {
                         });
                     }
                 });
-                //return;
-        
             }
         }
     });

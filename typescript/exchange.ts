@@ -7,7 +7,6 @@ const packageDef = protoLoader.loadSync("../proto/valuta.proto", {}); //gli pass
 const grpcObject = grpc.loadPackageDefinition(packageDef); //carico il package come oggetto
 const convertiPackage = grpcObject.convertiPackage;
 
-
 const server = new grpc.Server(); //crea il server
 server.bindAsync = promisify(server.bindAsync); //lo fa asincrono
 
@@ -35,19 +34,11 @@ function converti (call, callback)
 
     let verso:number;
 
- 
-
-
-
     //controllo sul giusto cambio
     if (from == 'USD' && to == 'EUR')
-    {
         verso = 1; //da dollari a euro
-    }
     else if (to == 'USD' && from == 'EUR')
-    {
         verso = 2;//da euro a dollari
-    }
     else
     {
         console.log('errore nel cambio');
@@ -65,18 +56,15 @@ function converti (call, callback)
     const https = require('https');
     const url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml?46f0dd7988932599cb1bcac79a10a16a"; //link della BCE
     let dati: string;
-    let cambio:number;
-
+    
     dati = ''; //i dati che vengono presi dal file xml
 
-    https.get(url, res => {
+    https.get(url, async (res) => {
         res.on('data', chunk => 
         {
             dati += chunk; //legge riga per riga il file
         });
         res.on('end', () => { //viene trasformato in un formato stringa leggibile 
-
-            
             const xml2js = require ('xml2js');
             const parser = new xml2js.Parser(); 
 
@@ -88,65 +76,48 @@ function converti (call, callback)
                 //const cambio = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'][0]['$']['rate'];  //ottengo il cambio euro dollari
                 //console.log(cambio);// primo tag   => primo cube => cube time => primo oggetto cube => rate
 
+                let cambio:number;
                 const cambiValute = json['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'];
-                let trovato = false; //serve per verificare di aver torvato il valore corrispondente, nel caso restituisce undefined
                 for (let i = 0; i < cambiValute.length; i++)
                 {
                     if (cambiValute[i]['$']['currency'] == 'USD')
                     {
                         cambio = cambiValute[i]['$']['rate'];
-                        trovato = true;
                         break;
                     }
                 }
 
-                /*
-                if (trovato) //se trovo il tasso di cambio giusto, lo restituisco, altrimenti undefined     
-                    return cambio;
+                //se non trovo il tasso di cambio, do errore
+                if (!cambio)
+                {
+                    console.log('Errore nel trovare il cambio');
+                    return;
+                }
                 else
-                    return undefined;
-                */
+                {
+                    let quantita_comprata:number;
+                    //euro : dollari = 1 : cambio
+                    if (verso == 1) //da dollari ad euro
+                    {
+                        quantita_comprata = quantita_spesa / cambio;
+                    }
+                    else //da euro a dollari
+                    {
+                        quantita_comprata = quantita_spesa * cambio;
+                    }
+                
+                    //invio al client
+                    const output = 
+                    {
+                        'quantitaComprata': quantita_comprata.toFixed(2)
+                    }
+                
+                    callback(null, output);
+                }
 
-                if (!trovato) //se non trovo il tasso di cambio giusto, undefined     
-                    cambio = undefined;
             });    
         });
     }).on('error', err => {
-        console.log(err.message);
+        console.log('errore durante la lettura del file: '+err.message);
     });
-
-    
- 
-    //aspetto che il file venga letto del tutto per poi rimandare al client il nuovo valore
-    setTimeout(() => 
-    {
-        if (!cambio)
-        {
-            console.log('Errore nella lettura del file xml');
-            return;
-        }
-
-        let quantita_comprata:number;
-        //euro : dollari = 1 : cambio
-        if (verso == 1) //da dollari ad euro
-        {
-            quantita_comprata = quantita_spesa / cambio;
-        }
-        else //da euro a dollari
-        {
-            quantita_comprata = quantita_spesa * cambio;
-        }
-
-        //console.log(quantita_comprata);
-
-        //invio al client
-        const output = 
-        {
-            'quantitaComprata': quantita_comprata.toFixed(2)
-        }
-
-        callback(null, output);
-
-    }, 5000);
-
 }
