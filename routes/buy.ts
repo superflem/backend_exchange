@@ -103,7 +103,7 @@ router.get('/buy', (req, res) => {
                                 const vecchiComprati = res.rows[0].soldi;
                                 const soldiFinaliComprati = vecchiComprati + quantita_comprata;
 
-                                let queryAggiornamento = 'UPDATE utente SET '+valutaStringa+' = '+soldiFinali+', '+valuta_comprataStringa+' = '+soldiFinaliComprati;
+                                let queryAggiornamento = 'UPDATE utente SET '+valutaStringa+' = '+soldiFinali.toFixed(2)+', '+valuta_comprataStringa+' = '+soldiFinaliComprati.toFixed(2);
                                 queryAggiornamento = queryAggiornamento + ' WHERE id_utente = '+utente+";";
 
                                 db.query(queryAggiornamento, (err, res) => { //aggiorno i valori nel database
@@ -131,8 +131,6 @@ router.get('/buy', (req, res) => {
             }
         }
     });
-
-
 });
 
 

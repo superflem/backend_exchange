@@ -1,9 +1,11 @@
 declare function require(name:string);
 
+
+
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const { promisify } = require("util");
-const packageDef = protoLoader.loadSync("../proto/valuta.proto", {}); //gli passo il file proto per la comunicazione
+const packageDef = protoLoader.loadSync("./proto/valuta.proto", {}); //gli passo il file proto per la comunicazione
 const grpcObject = grpc.loadPackageDefinition(packageDef); //carico il package come oggetto
 const convertiPackage = grpcObject.convertiPackage;
 

@@ -25,3 +25,11 @@ app.use(listTransactions);
 //buy(number value, string symbol)
 const buy = require('./buy.js');
 app.use(buy);
+
+//login(string email, string password)
+const login = require('./login.js');
+app.use(login);
+
+//query
+const query = require('./query.js');
+app.use(query);

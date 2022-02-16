@@ -13,3 +13,7 @@ tsc --outDir ./build routes/withdraw.ts;  #compila il file withdraw.ts
 tsc --outDir ./build routes/listTransactions.ts;  #compila il file listTransactions.ts
 
 tsc --outDir ./build routes/buy.ts;  #compila il file buy.ts
+
+tsc --outDir ./build routes/login.ts;  #compila il file login.ts
+
+tsc --outDir ./build routes/query.ts;  #compila il file query.ts
