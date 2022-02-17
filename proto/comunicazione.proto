@@ -9,6 +9,29 @@ service ComunicazioneServer { //servizi che da il server
     rpc eseguiQuery (user) returns (risultatoQuery);
     rpc eseguiSignup (signup) returns (risultato);
     rpc eseguiBuy (compra) returns (risultato);
+    rpc eseguiList (inputLista) returns (outputLista);
+}
+
+message inputLista {
+    int32 utente = 1;
+    string valuta = 2;
+    string data = 3;
+}
+
+/*
+
+message listaTransizioni {
+    float quantitaSpesa = 1;
+    float quantitaComprata = 2;
+    string valutaComprata = 3;
+    string data = 4;
+}
+*/
+
+message outputLista {
+    bool isTuttoOk = 1;
+    string messaggio = 2;
+    string listaTransizioni = 3;
 }
 
 message compra {

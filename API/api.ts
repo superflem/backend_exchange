@@ -119,6 +119,25 @@ app.post('/buy', verifica, (req, res) => {
     
 });
 
+//LIST TRANSACTIONS
+app.post('/listTransactions', (req, res) => {
+    const {utente, valuta, data} = req.body;
+
+    const invio = {
+        "utente": utente,
+        "valuta": valuta,
+        "data": data
+    };
+
+    client.eseguiList(invio, (err, res) => {
+        console.log(res["messaggio"]);
+
+        //traduco da stringa a json
+        const oggettoJson = JSON.parse(res["listaTransizioni"]);
+        console.log(oggettoJson[0]["quantita_spesa"]);
+    });
+});
+
 function verifica (req, res, next)
 {
     const token = req.headers.token; //il JWT lo metto nell'header della richiesta http e in questo mondo lo leggo

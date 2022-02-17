@@ -31,7 +31,8 @@ server.bindAsync("0.0.0.0:9001", grpc.ServerCredentials.createInsecure()) //asco
         "eseguiWithdraw": require('./withdraw.js'),
         "eseguiQuery": require('./query.js'),
         "eseguiSignup": require('./signup.js'),
-        "eseguiBuy": require('./buy.js')
+        "eseguiBuy": require('./buy.js'),
+        "eseguiList": require('./listTransactions.js')
     }); //quello sopra è un oggetto json. il parametro tra virgolette è rpc del file proto, metre il secondo è la funzione qui sotto
     server.start() //faccio partire il server
 
