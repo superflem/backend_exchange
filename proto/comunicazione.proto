@@ -1,0 +1,33 @@
+syntax = "proto3"; //versione del buffer
+
+package comunicazionePackage;
+
+service ComunicazioneServer { //servizi che da il server
+    rpc eseguiLogin (credenziali) returns (connessione); //crea una comunicazione
+    rpc eseguiDeposito (quantitaDeposito) returns (risultatoDeposito);
+    rpc eseguiWithdraw (quantitaDeposito) returns (risultatoDeposito);
+}
+
+
+message credenziali {
+    string email = 1;
+    string password = 2;
+
+}
+
+message connessione {  //messaggio che può inviare il server, sono i parametri dell'oggetto json che viene mandato
+    bool isTuttoOk = 1;
+    string token = 2;
+    int32 utente = 3;
+}
+
+message quantitaDeposito {
+    int32 utente = 1;
+    float valore = 2;
+    string simbolo = 3;
+}
+
+message risultatoDeposito {
+    bool isTuttoOk = 1;
+    string messaggio = 2; 
+}

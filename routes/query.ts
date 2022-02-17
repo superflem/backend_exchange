@@ -5,9 +5,9 @@ const db = require('./database.js');
 
 //ottengo gli euro e i dollari di un determinato utente dato dalla email
 router.get('/query', (req, res) => {
-    const email = 'giulio.cesare@gmail.com';
+    const utente = 2;
 
-    const query = "SELECT dollari, euro FROM utente WHERE email = '"+email+"';";
+    const query = "SELECT dollari, euro FROM utente WHERE id_utente = '"+utente+"';";
 
     db.query(query, (err, res) => {
         if (err)
