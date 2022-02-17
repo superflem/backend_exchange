@@ -65,7 +65,43 @@ app.post('/withdraw', verifica, (req, res) => {
     });
 });
 
+//QUERY
+app.post('/query', verifica, (req, res) => {
+    const {utente} = req.body;
 
+    const invio = {
+        "utente": utente
+    };
+
+    client.eseguiQuery(invio, (err, res) => {
+        if (res["isTuttoOk"])
+        {
+            console.log('dollari: '+res['dollari']);
+            console.log('euro: '+res['euro']);
+        }
+        else
+        {
+            console.log('errore inatteso');
+        }
+    });
+});
+
+//SIGNUP
+app.post('/signup', verifica, (req, res) => {
+    const {email, password, nome, cognome, iban} = req.body;
+
+    const invio = {
+        "email": email,
+        "password": password,
+        "nome": nome,
+        "cognome": cognome,
+        "iban": iban
+    };
+
+    client.eseguiSignup(invio, (err, res) => {
+        console.log(res["messaggio"]);
+    });
+});
 
 
 function verifica (req, res, next)

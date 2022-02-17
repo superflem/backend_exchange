@@ -28,7 +28,9 @@ server.bindAsync("0.0.0.0:9001", grpc.ServerCredentials.createInsecure()) //asco
     server.addService(comunicazionePackage.ComunicazioneServer.service, { //aggiungo il servizio ComunicazioneServer del package comunicazionePackage al server
         "eseguiLogin": require('./login.js'),
         "eseguiDeposito": require('./deposit.js'),
-        "eseguiWithdraw": require('./withdraw')
+        "eseguiWithdraw": require('./withdraw.js'),
+        "eseguiQuery": require('./query.js'),
+        "eseguiSignup": require('./signup.js')
     }); //quello sopra è un oggetto json. il parametro tra virgolette è rpc del file proto, metre il secondo è la funzione qui sotto
     server.start() //faccio partire il server
 

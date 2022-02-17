@@ -4,15 +4,23 @@ package comunicazionePackage;
 
 service ComunicazioneServer { //servizi che da il server
     rpc eseguiLogin (credenziali) returns (connessione); //crea una comunicazione
-    rpc eseguiDeposito (quantitaDeposito) returns (risultatoDeposito);
-    rpc eseguiWithdraw (quantitaDeposito) returns (risultatoDeposito);
+    rpc eseguiDeposito (quantitaDeposito) returns (risultato);
+    rpc eseguiWithdraw (quantitaDeposito) returns (risultato);
+    rpc eseguiQuery (user) returns (risultatoQuery);
+    rpc eseguiSignup (signup) returns (risultato);
 }
 
+message signup {
+    string email = 1;
+    string password = 2;
+    string nome = 3;
+    string cognome = 4;
+    string iban = 5;
+}
 
 message credenziali {
     string email = 1;
     string password = 2;
-
 }
 
 message connessione {  //messaggio che può inviare il server, sono i parametri dell'oggetto json che viene mandato
@@ -27,7 +35,17 @@ message quantitaDeposito {
     string simbolo = 3;
 }
 
-message risultatoDeposito {
+message risultato {
     bool isTuttoOk = 1;
     string messaggio = 2; 
+}
+
+message user {
+    int32 utente = 1;
+}
+
+message risultatoQuery {
+    bool isTuttoOk = 1;
+    float euro = 2; 
+    float dollari = 3;
 }
