@@ -1,31 +1,29 @@
 declare function require(stringa:string);
-const express = require('express');
-const router = express.Router();
-const db = require('./database.js');
 
+function eseguiBuy (call, callback)
+{
+    const db = require('./database.js'); //database
+    
+    //inizializzo come se fosse un client grpc
+    const grpc = require("@grpc/grpc-js");
+    const protoLoader = require("@grpc/proto-loader");
+    const packageDef = protoLoader.loadSync("proto/valuta.proto", {}); //gli passo il file proto per la comunicazione
+    const grpcObject = grpc.loadPackageDefinition(packageDef); //carico il package come oggetto
+    const convertiPackage = grpcObject.convertiPackage;
 
-//inizializzo come se fosse un client grpc
-const grpc = require("@grpc/grpc-js");
-const protoLoader = require("@grpc/proto-loader");
-const packageDef = protoLoader.loadSync("proto/valuta.proto", {}); //gli passo il file proto per la comunicazione
-const grpcObject = grpc.loadPackageDefinition(packageDef); //carico il package come oggetto
-const convertiPackage = grpcObject.convertiPackage;
+    const client = new convertiPackage.ScambioValuta("localhost:9000", grpc.credentials.createInsecure()); //dico al client con quale package devo comunicare e dove è il server
 
-const client = new convertiPackage.ScambioValuta("localhost:9000", grpc.credentials.createInsecure()); //dico al client con quale package devo comunicare e dove è il server
+    //prendo le variabili dalle api
+    const utente = call.request["utente"];
+    const quantita_spesa = call.request["quantitaSpesa"];
+    const valuta = call.request["valuta"];
 
+    const risposta = {
+        "isTuttoOk": false,
+        "messaggio": 'Errore sconosciuto'
+    };
 
-
-// buy(number value, string symbol)
-router.get('/buy', (req, res) => {
-    //inizio a fare tutti icontrolli del caso ed eseguo le prime query
-    const utente = 2;
-    let quantita_spesa:number;
-    let valuta: string;
-
-
-    quantita_spesa = 2;
-    valuta = 'EUR';
-
+    //dichiaro le altre variabili
     let valutaStringa:string;
     let valuta_comprata:string;
     let valuta_comprataStringa:string;
@@ -43,16 +41,18 @@ router.get('/buy', (req, res) => {
         valuta_comprataStringa = 'dollari';
         valutaStringa = 'euro';
     }
-    else
+    else //valuta sbagliata
     {
-        console.log('errore nella valuta');
+        risposta["messaggio"] = 'errore nella valuta';
+        callback(null, risposta);
         return;
     }
 
     // controllo sulla quantita
     if (quantita_spesa <= 0)
     {
-        console.log('errore nella quantità');
+        risposta["messaggio"] = 'errore nella quantità';
+        callback(null, risposta);
         return;
     }
 
@@ -62,17 +62,25 @@ router.get('/buy', (req, res) => {
     db.query(queryControllo, (err, res) => { //controllo di avere abbastanza soldi
         if (err)
         {
-            console.log(err.message);
+            risposta["messaggio"] = err.message;
+            callback(null, risposta);
         }
         else
         {
+            if (res.rows.length == 0) //controllo di aver trovato l'utente
+            {
+                risposta["messaggio"] = "utente non trovato";
+                callback(null, risposta);
+                return;
+            }
+
             if (quantita_spesa > res.rows[0].soldi) //controllo sui soldi
             {
-                console.log('non hai abbastanza denaro');
+                risposta["messaggio"] = "non hai abbastanza soldi";
+                callback(null, risposta);
             }
             else
             {
-                
                 const soldiIniziali = res.rows[0].soldi;
                 const soldiFinali = soldiIniziali - quantita_spesa;
 
@@ -85,8 +93,11 @@ router.get('/buy', (req, res) => {
                 }
 
                 client.converti(input, (err, res) => { //comunico al server di fare il cambio
-                    if (err)
-                        console.log(err);
+                    if (err) //errore nella comunicazione nel server di scambio
+                    {
+                        risposta["messaggio"] = err.message;
+                        callback(null, risposta);
+                    }
                     else
                     {
                         //se non ricevo errori, ottengo il valore cambiato di valuta e continuo con le interrogazioni al database
@@ -94,9 +105,10 @@ router.get('/buy', (req, res) => {
 
                         const queryComprata = 'SELECT '+valuta_comprataStringa+' AS soldi FROM utente WHERE id_utente = '+utente+";";
                         db.query(queryComprata, (err, res) => { //guardo quanti soldi dell'altra valuta ho
-                            if (err)
+                            if (err) // errore nella query per trovare i soldi che si hanno gia
                             {
-                                console.log(err.message);
+                                risposta["messaggio"] = err.message;
+                                callback(null, risposta);
                             }
                             else
                             {
@@ -107,8 +119,11 @@ router.get('/buy', (req, res) => {
                                 queryAggiornamento = queryAggiornamento + ' WHERE id_utente = '+utente+";";
 
                                 db.query(queryAggiornamento, (err, res) => { //aggiorno i valori nel database
-                                    if (err)
-                                        console.log('pippo '+err.message);
+                                    if (err) //errore nella query di aggiornamento
+                                    {
+                                        risposta["messaggio"] = err.message;
+                                        callback(null, risposta);
+                                    }
                                     else
                                     {
                                         const dataStringa = calcolaData(); //calcolo la data di oggi nel formato corretto
@@ -116,10 +131,17 @@ router.get('/buy', (req, res) => {
                                         queryInserimento = queryInserimento + dataStringa + "');";
 
                                         db.query(queryInserimento, (err, res) => { //inserisco nella tabella transizione
-                                            if (err)
-                                                console.log(err.message);
+                                            if (err) //errore nell'inserimento della query nelle transizione
+                                            {
+                                                risposta["messaggio"] = err.message;
+                                                callback(null, risposta);
+                                            }
                                             else
-                                                console.log('tutto ok');
+                                            {
+                                                risposta["messaggio"] = "tutto ok";
+                                                risposta["isTuttoOk"] = true;
+                                                callback(null, risposta);
+                                            }
                                         });
                                     }
                                 });
@@ -131,8 +153,7 @@ router.get('/buy', (req, res) => {
             }
         }
     });
-});
-
+}
 
 function calcolaData ()
 {
@@ -163,4 +184,4 @@ function calcolaData ()
     return anno+'-'+mese+'-'+giorno;
 }
 
-export = router;
+export = eseguiBuy;

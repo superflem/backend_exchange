@@ -8,6 +8,13 @@ service ComunicazioneServer { //servizi che da il server
     rpc eseguiWithdraw (quantitaDeposito) returns (risultato);
     rpc eseguiQuery (user) returns (risultatoQuery);
     rpc eseguiSignup (signup) returns (risultato);
+    rpc eseguiBuy (compra) returns (risultato);
+}
+
+message compra {
+    int32 utente = 1;
+    float quantitaSpesa = 2;
+    string valuta = 3;
 }
 
 message signup {

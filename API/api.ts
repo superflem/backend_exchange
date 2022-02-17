@@ -103,6 +103,21 @@ app.post('/signup', verifica, (req, res) => {
     });
 });
 
+//BUY
+app.post('/buy', verifica, (req, res) => {
+    const {utente, quantita_spesa, valuta} = req.body;
+
+    const invio = {
+        "utente": utente,
+        "quantitaSpesa": quantita_spesa.toFixed(2),
+        "valuta": valuta
+    };
+
+    client.eseguiBuy(invio, (err, res) => {
+        console.log(res["messaggio"]);
+    });
+    
+});
 
 function verifica (req, res, next)
 {
@@ -126,8 +141,3 @@ function verifica (req, res, next)
         res.status(401).json('non sei autenticato');
     }
 }
-
-
-app.post('/ciccio', verifica, (req, res) => { //cosa a caso per verificare il token
-    res.json('hai superato la verifica: '+req.email);
-})
