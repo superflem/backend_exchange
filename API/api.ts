@@ -132,9 +132,15 @@ app.post('/listTransactions', (req, res) => {
     client.eseguiList(invio, (err, res) => {
         console.log(res["messaggio"]);
 
-        //traduco da stringa a json
-        const oggettoJson = JSON.parse(res["listaTransizioni"]);
-        console.log(oggettoJson[0]["quantita_spesa"]);
+        //traduco da stringa a json se non ci sono errori
+        if (res["isTuttoOk"])
+        {
+            /*
+            const oggettoJson = JSON.parse(res["listaTransizioni"]);
+            console.log(oggettoJson[0]["quantita_spesa"]);
+            */
+           console.log(JSON.parse(res["listaTransizioni"]));
+        }
     });
 });
 
