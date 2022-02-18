@@ -19,6 +19,8 @@ const client = new comunicazionePackage.ComunicazioneServer("localhost:9001", gr
 
 app.listen(80); //le api stanno in ascolto sulla porta 80
 
+let tokenValidi = [];
+
 //LOGIN
 app.post('/login', (req, res) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
     const {email, password} = req.body;
@@ -31,6 +33,7 @@ app.post('/login', (req, res) => { //quando qualcuno fa la richiesta di login, l
         console.log('sono rientrato');
 
         console.log(res["token"]);
+        tokenValidi.push(res["token"]); //inserisco il nuovo token nell'array dei token validi
       
     });
 });
@@ -144,6 +147,43 @@ app.post('/listTransactions', (req, res) => {
     });
 });
 
+//LOGOUT
+app.post("/logout", verifica, (req, res) => {
+    const token = req.headers.token; //passo il token nel body della richiesta
+
+    tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== token); //tolgo il token
+
+    res.status(200).json("logout effettuato"); //restituisco il nuovo token
+});
+
+//REFRESH DEL TOKEN
+app.post("/refresh", (req, res) => {
+    const vecchioToken = req.headers.token; //passo il token nel body della richiesta
+
+    if (!vecchioToken)
+        return res.status(401).json("non sei autenticato"); //se non cè il token
+    
+    if (!tokenValidi.includes(vecchioToken)) //se non è tra i token validi
+        return res.status(403).json('token non valido');
+
+
+    jwt.verify(vecchioToken, "chiaveSegreta", (err, user) => {
+        if (err)
+            return res.status(403).json('token non valido'); //il token è scaduto
+
+        //se il token è ancora valido ne creo uno nuovo e invalido quello vecchio
+        const nuovoToken = jwt.sign({id:user.id}, "chiaveSegreta", {expiresIn: "15m"});
+
+        tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== vecchioToken); //tolgo il vecchio token
+        tokenValidi.push(nuovoToken); //inserisco il nuovo token
+
+        res.status(200).json({"nuovoToken": nuovoToken}); //restituisco il nuovo token
+    });
+});
+
+
+
+
 function verifica (req, res, next)
 {
     const token = req.headers.token; //il JWT lo metto nell'header della richiesta http e in questo mondo lo leggo
@@ -156,7 +196,10 @@ function verifica (req, res, next)
             }
             else //se è tutto ok, setto la mail e vado avanti
             {
-                req.email = user;
+                if (!tokenValidi.includes(token)) //se non è tra i token validi
+                    return res.status(403).json('token non valido');
+                
+                req.user = user;
                 next();
             }
         });
@@ -166,3 +209,20 @@ function verifica (req, res, next)
         res.status(401).json('non sei autenticato');
     }
 }
+
+//toglie i token scaduti da tokenValidi
+function cancellaToken()
+{
+    for (let i = 0; i < tokenValidi.length; i++)
+    {
+        jwt.verify(tokenValidi[i], "chiaveSegreta", (err, user) => {
+            if (err)
+            {
+                tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== tokenValidi[i]); //tolgo il token scaduto
+                i = i-2;
+            }
+        });
+    }
+}
+
+setInterval(cancellaToken, 900000); //ogni 15 minuti, tolgo i token scaduti da tokenValidi

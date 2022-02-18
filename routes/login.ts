@@ -32,7 +32,7 @@ function eseguiLogin(call, callback)
                 console.log('Utente trovato')
                 console.log(res.rows);
 
-                const accessToken = jwt.sign({id:res.rows.id_utente}, "chiaveSegreta"); //creo il token con la chiave "chiaveSegreta"
+                const accessToken = jwt.sign({id:res.rows.id_utente}, "chiaveSegreta", {expiresIn: "15m"}); //creo il token con la chiave "chiaveSegreta" che rimane valido per 15 min
 
                 risposta["isTuttoOk"] = true;
                 risposta["token"] = accessToken;
