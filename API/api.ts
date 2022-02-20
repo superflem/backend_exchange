@@ -2,7 +2,8 @@ declare function require(name:string);
 
 const express = require ('express');
 const app = express();
-app.use(express.json());
+//app.use(express.json());
+app.use(express.text());
 
 const jwt = require('jsonwebtoken'); //JWT (qua faccio la verifica dei token)
 
@@ -23,8 +24,11 @@ let tokenValidi = [];
 
 //LOGIN
 app.post('/login', (req, res) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
-    const {email, password} = req.body;
+    //const {email, password} = req.body;
 
+    const email = JSON.parse(req.body)["email"];
+    const password = JSON.parse(req.body)["password"];
+    /*
     const invio = {
         "email": email,
         "password": password
@@ -36,6 +40,13 @@ app.post('/login', (req, res) => { //quando qualcuno fa la richiesta di login, l
         tokenValidi.push(res["token"]); //inserisco il nuovo token nell'array dei token validi
       
     });
+    */
+   console.log(" ");
+   console.log("email e password: "+email +" "+ password);
+
+   res.header('Access-Control-Allow-Origin', '*');
+
+   res.status(200).json("bella li");
 });
 
 //DEPOSITO
