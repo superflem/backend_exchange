@@ -23,30 +23,22 @@ app.listen(80); //le api stanno in ascolto sulla porta 80
 let tokenValidi = [];
 
 //LOGIN
-app.post('/login', (req, res) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
-    //const {email, password} = req.body;
-
+app.post('/login', (req, response) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
+    //ricevo lamail e la password
     const email = JSON.parse(req.body)["email"];
     const password = JSON.parse(req.body)["password"];
-    /*
-    const invio = {
+    
+    const invio = { //creo l'oggeto json da inviare al server
         "email": email,
         "password": password
     }
     client.eseguiLogin(invio, (err, res) => {
-        console.log('sono rientrato');
-
-        console.log(res["token"]);
         tokenValidi.push(res["token"]); //inserisco il nuovo token nell'array dei token validi
-      
+    
+        response.header('Access-Control-Allow-Origin', '*');
+
+        response.send(JSON.stringify(res)); //rimando al client
     });
-    */
-   console.log(" ");
-   console.log("email e password: "+email +" "+ password);
-
-   res.header('Access-Control-Allow-Origin', '*');
-
-   res.status(200).json("bella li");
 });
 
 //DEPOSITO
