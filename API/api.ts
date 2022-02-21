@@ -1,11 +1,15 @@
 declare function require(name:string);
 
 const express = require ('express');
-const app = express();
-//app.use(express.json());
-app.use(express.text());
-
+const cookieParser = require('cookie-parser'); //permette di leggere i cookie
 const jwt = require('jsonwebtoken'); //JWT (qua faccio la verifica dei token)
+
+const app = express(); //creo l'applicativo di express
+
+app.use(cookieParser()); //uso i cookie
+app.use(express.text()); //dico che riceverò del testo dal client
+
+
 
 //GRPC
 //come per il server, deve conoscere il pacchetto e i servizi
@@ -37,6 +41,9 @@ app.post('/login', (req, response) => { //quando qualcuno fa la richiesta di log
     
         response.header('Access-Control-Allow-Origin', '*');
 
+        if (res["isTuttoOk"]) //se è tutto ok setto il cookie
+            response.cookie('jwt', res["token"], {httpOnly: true, maxAge: 900000}); //setto il cookie del jwt in modo httpOnly per 15 minuti
+            //res.cookie('nome', 'valore', {httpOnly: true});
         response.send(JSON.stringify(res)); //rimando al client
     });
 });
@@ -229,3 +236,19 @@ function cancellaToken()
 }
 
 setInterval(cancellaToken, 900000); //ogni 15 minuti, tolgo i token scaduti da tokenValidi
+
+
+
+
+
+
+/*
+app.post("/ciao", (req, res) => {
+    res.cookie('nome', 'valore', {httpOnly: true});
+    res.json("arrivati i biscotti2");
+});
+
+app.post("/ciaoo", (req, res) => {
+    res.json(req.cookies["nome"]);
+});
+*/
