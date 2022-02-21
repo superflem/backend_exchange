@@ -5,38 +5,37 @@ function eseguiLogin(call, callback)
     const db = require('./database.js');
     const jwt = require('jsonwebtoken'); //JWT
 
-    const email = call.request["email"];
+    //ricevo email e password
+    const email = call.request["email"]; 
     const password = call.request["password"];
     
-    const risposta = {
+    const risposta = { //creo l'oggetto di risposta
         "isTuttoOk": false,
         "token": 'Errore sconosciuto',
-        "utente": -1
+        "utente": -1,
+        "nome": ""
     };
 
     const query = "SELECT * FROM utente WHERE email = '"+email+"' AND password = '"+password+"'";
-    db.query(query, (err, res) => {
+    db.query(query, (err, res) => { //eseguo la query di ricerca
         if (err) //se c'è un errore nella query
         {
-            console.log(err.message);
+            risposta["token"] = err.message;
         }
         else
         {
             if (res.rows.length == 0) //se la lunghezza dei risultati è 0, vuol dire che non ho trovato una corrispondenza email password
             {
                 risposta["token"] = 'Email o password errati';
-                console.log('Email o password errati');
             }
             else //se trovo l'utente lo loggo
             {
-                console.log('Utente trovato')
-                console.log(res.rows);
-
                 const accessToken = jwt.sign({id:res.rows.id_utente}, "chiaveSegreta", {expiresIn: "15m"}); //creo il token con la chiave "chiaveSegreta" che rimane valido per 15 min
 
                 risposta["isTuttoOk"] = true;
                 risposta["token"] = accessToken;
-                risposta["utente"] = res.rows.id_utente;
+                risposta["utente"] = res.rows[0].id_utente;
+                risposta["nome"] = res.rows[0].nome;
             }
         }
         callback(null, risposta);
