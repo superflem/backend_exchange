@@ -3,13 +3,20 @@ declare function require(name:string);
 const express = require ('express');
 const cookieParser = require('cookie-parser'); //permette di leggere i cookie
 const jwt = require('jsonwebtoken'); //JWT (qua faccio la verifica dei token)
+const cors = require('cors');
 
 const app = express(); //creo l'applicativo di express
 
 app.use(cookieParser()); //uso i cookie
-app.use(express.text()); //dico che riceverò del testo dal client
 
+const corsOption = {
+    origin: "*"
+};
+app.use(cors(corsOption)); //dico che va bene quello che arriva da qualsiasi parte
 
+const bodyParser = require('body-parser') //per parsare il body
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 //GRPC
 //come per il server, deve conoscere il pacchetto e i servizi
@@ -28,9 +35,9 @@ let tokenValidi = [];
 
 //LOGIN
 app.post('/login', (req, response) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
-    //ricevo lamail e la password
-    const email = JSON.parse(req.body)["email"];
-    const password = JSON.parse(req.body)["password"];
+    //ricevo lamail e la password  
+    const email = req.body.email;
+    const password = req.body.password; 
     
     const invio = { //creo l'oggeto json da inviare al server
         "email": email,
@@ -38,13 +45,12 @@ app.post('/login', (req, response) => { //quando qualcuno fa la richiesta di log
     }
     client.eseguiLogin(invio, (err, res) => {
         tokenValidi.push(res["token"]); //inserisco il nuovo token nell'array dei token validi
-    
-        response.header('Access-Control-Allow-Origin', '*');
 
         if (res["isTuttoOk"]) //se è tutto ok setto il cookie
             response.cookie('jwt', res["token"], {httpOnly: true, maxAge: 900000}); //setto il cookie del jwt in modo httpOnly per 15 minuti
             //res.cookie('nome', 'valore', {httpOnly: true});
-        response.send(JSON.stringify(res)); //rimando al client
+
+        response.status(200).json(JSON.stringify(res)); //rimando al client
     });
 });
 
