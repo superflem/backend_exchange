@@ -35,25 +35,7 @@ app.listen(80); //le api stanno in ascolto sulla porta 80
 let tokenValidi = [];
 
 //LOGIN
-app.post('/login', (req, response) => { //quando qualcuno fa la richiesta di login, lo reindirizzo al server user che crea il token jwt e lo rimando
-    //ricevo lamail e la password  
-    const email = req.body.email;
-    const password = req.body.password; 
-    
-    const invio = { //creo l'oggeto json da inviare al server
-        "email": email,
-        "password": password
-    }
-    client.eseguiLogin(invio, (err, res) => {
-        tokenValidi.push(res["token"]); //inserisco il nuovo token nell'array dei token validi
-
-        if (res["isTuttoOk"]) //se è tutto ok setto il cookie
-            response.cookie('jwt', res["token"], {httpOnly: true, maxAge: 900000}); //setto il cookie del jwt in modo httpOnly per 15 minuti
-            //res.cookie('nome', 'valore', {httpOnly: true});
-
-        response.status(200).json(JSON.stringify(res)); //rimando al client
-    });
-});
+app.post('/login', require('./login.js'));
 
 //DEPOSITO
 app.post('/deposit', verifica, (req, res) => {
@@ -250,12 +232,16 @@ setInterval(cancellaToken, 900000); //ogni 15 minuti, tolgo i token scaduti da t
 
 
 /*
-app.post("/ciao", (req, res) => {
-    res.cookie('nome', 'valore', {httpOnly: true});
+app.get("/ciao", (req, res) => {
+    res.cookie('nome', 'negro', {secure: true, sameSite: "none"});
     res.json("arrivati i biscotti2");
 });
-
-app.post("/ciaoo", (req, res) => {
-    res.json(req.cookies["nome"]);
-});
 */
+
+
+app.get("/ciaoo", (req, res) => {
+    console.log(req.cookies["jwt"]+" "+req.cookies["utente"]);
+    res.json(req.cookies["jwt"]+" "+req.cookies["utente"]);
+});
+
+
