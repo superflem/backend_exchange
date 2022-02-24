@@ -10,7 +10,8 @@ const app = express(); //creo l'applicativo di express
 app.use(cookieParser()); //uso i cookie
 
 const corsOption = {
-    origin: "*"
+    origin: "http://imac-di-mauro.lan:3000",
+    credentials: true
 };
 app.use(cors(corsOption)); //dico che va bene quello che arriva da qualsiasi parte
 
