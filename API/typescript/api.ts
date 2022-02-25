@@ -34,6 +34,9 @@ app.listen(80); //le api stanno in ascolto sulla porta 80
 
 let tokenValidi = [];
 
+//VERIFICO IL TOKEN
+app.post('/verifica', require('./verifica.js'));
+
 //LOGIN
 app.post('/login', require('./login.js'));
 
@@ -90,23 +93,6 @@ app.post('/query', verifica, (req, res) => {
 
 //SIGNUP
 app.post('/signup', require('./signup.js'));
-/*
-app.post('/signup', verifica, (req, res) => {
-    const {email, password, nome, cognome, iban} = req.body;
-
-    const invio = {
-        "email": email,
-        "password": password,
-        "nome": nome,
-        "cognome": cognome,
-        "iban": iban
-    };
-
-    client.eseguiSignup(invio, (err, res) => {
-        console.log(res["messaggio"]);
-    });
-});
-*/
 
 //BUY
 app.post('/buy', verifica, (req, res) => {
