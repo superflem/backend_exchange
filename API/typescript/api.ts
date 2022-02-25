@@ -89,6 +89,8 @@ app.post('/query', verifica, (req, res) => {
 });
 
 //SIGNUP
+app.post('/signup', require('./signup.js'));
+/*
 app.post('/signup', verifica, (req, res) => {
     const {email, password, nome, cognome, iban} = req.body;
 
@@ -104,6 +106,7 @@ app.post('/signup', verifica, (req, res) => {
         console.log(res["messaggio"]);
     });
 });
+*/
 
 //BUY
 app.post('/buy', verifica, (req, res) => {
