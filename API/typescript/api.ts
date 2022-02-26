@@ -32,16 +32,16 @@ const client = new comunicazionePackage.ComunicazioneServer("localhost:9001", gr
 
 app.listen(80); //le api stanno in ascolto sulla porta 80
 
-let tokenValidi = [];
+//let tokenValidi = [];
 
 //VERIFICO IL TOKEN
-app.post('/verifica', require('./verifica.js'));
+//app.post('/verifica', require('./verifica.js'));
 
 //LOGIN
 app.post('/login', require('./login.js'));
 
 //DEPOSITO
-app.post('/deposit', verifica, (req, res) => {
+app.post('/deposit', require('./verifica.js'), (req, res) => {
     const {utente, valore, simbolo} = req.body;
 
     const invio = {
@@ -56,7 +56,7 @@ app.post('/deposit', verifica, (req, res) => {
 });
 
 //WITHDRAW
-app.post('/withdraw', verifica, (req, res) => {
+app.post('/withdraw', require('./verifica.js'), (req, res) => {
     const {utente, valore, simbolo} = req.body;
 
     const invio = {
@@ -71,7 +71,9 @@ app.post('/withdraw', verifica, (req, res) => {
 });
 
 //QUERY
-app.post('/query', verifica, (req, res) => {
+app.post('/query', require('./verifica.js'), require('./query.js'));
+/*
+app.post('/query', require('./verifica.js'), (req, res) => {
     const {utente} = req.body;
 
     const invio = {
@@ -90,12 +92,13 @@ app.post('/query', verifica, (req, res) => {
         }
     });
 });
+*/
 
 //SIGNUP
 app.post('/signup', require('./signup.js'));
 
 //BUY
-app.post('/buy', verifica, (req, res) => {
+app.post('/buy', require('./verifica.js'), (req, res) => {
     const {utente, quantita_spesa, valuta} = req.body;
 
     const invio = {
@@ -111,7 +114,7 @@ app.post('/buy', verifica, (req, res) => {
 });
 
 //LIST TRANSACTIONS
-app.post('/listTransactions', (req, res) => {
+app.post('/listTransactions', require('./verifica.js'), (req, res) => {
     const {utente, valuta, data} = req.body;
 
     const invio = {
@@ -136,6 +139,7 @@ app.post('/listTransactions', (req, res) => {
 });
 
 //LOGOUT
+/*
 app.post("/logout", verifica, (req, res) => {
     const token = req.headers.token; //passo il token nel body della richiesta
 
@@ -143,7 +147,9 @@ app.post("/logout", verifica, (req, res) => {
 
     res.status(200).json("logout effettuato"); //restituisco il nuovo token
 });
+*/
 
+/*
 //REFRESH DEL TOKEN
 app.post("/refresh", (req, res) => {
     const vecchioToken = req.headers.token; //passo il token nel body della richiesta
@@ -198,6 +204,7 @@ function verifica (req, res, next)
     }
 }
 
+
 //toglie i token scaduti da tokenValidi
 function cancellaToken()
 {
@@ -215,7 +222,7 @@ function cancellaToken()
 
 setInterval(cancellaToken, 900000); //ogni 15 minuti, tolgo i token scaduti da tokenValidi
 
-
+*/
 
 
 

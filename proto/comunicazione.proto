@@ -69,4 +69,5 @@ message risultatoQuery {
     bool isTuttoOk = 1;
     float euro = 2; 
     float dollari = 3;
+    string messaggio = 4;
 }

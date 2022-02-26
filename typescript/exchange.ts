@@ -1,6 +1,4 @@
-declare function require(name:string);
-
-
+declare function require(s:string);
 
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");

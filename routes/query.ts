@@ -9,7 +9,8 @@ function query (call, callback)
     const invio = {
         "isTuttoOk": false,
         "euro": 0,
-        "dollari": 0
+        "dollari": 0,
+        "messaggio": "errore inatteso"
     };
 
     const query = "SELECT dollari, euro FROM utente WHERE id_utente = '"+utente+"';";
@@ -23,7 +24,7 @@ function query (call, callback)
         {
             if (res.rows.length == 0) //controllo di aver trovato l'utente
             {
-                invio["messaggio"] = 'utente non trovato';
+                invio["messaggio"] = "utente non trovato";
                 callback(null, invio);
             }
             else //se tutto ok
@@ -31,6 +32,7 @@ function query (call, callback)
                 invio["euro"] = res.rows[0].euro;
                 invio["dollari"] = res.rows[0].dollari;
                 invio["isTuttoOk"] = true;
+                invio["messaggio"] = "tutto ok";
 
                 callback(null, invio);
             }
