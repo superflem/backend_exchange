@@ -32,10 +32,7 @@ const client = new comunicazionePackage.ComunicazioneServer("localhost:9001", gr
 
 app.listen(80); //le api stanno in ascolto sulla porta 80
 
-//let tokenValidi = [];
-
 //VERIFICO IL TOKEN
-//app.post('/verifica', require('./verifica.js'));
 
 //LOGIN
 app.post('/login', require('./login.js'));
@@ -72,27 +69,6 @@ app.post('/withdraw', require('./verifica.js'), (req, res) => {
 
 //QUERY
 app.post('/query', require('./verifica.js'), require('./query.js'));
-/*
-app.post('/query', require('./verifica.js'), (req, res) => {
-    const {utente} = req.body;
-
-    const invio = {
-        "utente": utente
-    };
-
-    client.eseguiQuery(invio, (err, res) => {
-        if (res["isTuttoOk"])
-        {
-            console.log('dollari: '+res['dollari']);
-            console.log('euro: '+res['euro']);
-        }
-        else
-        {
-            console.log('errore inatteso');
-        }
-    });
-});
-*/
 
 //SIGNUP
 app.post('/signup', require('./signup.js'));
@@ -139,102 +115,9 @@ app.post('/listTransactions', require('./verifica.js'), (req, res) => {
 });
 
 //LOGOUT
-/*
-app.post("/logout", verifica, (req, res) => {
-    const token = req.headers.token; //passo il token nel body della richiesta
+app.post("/logout", require('./logout.js'));
 
-    tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== token); //tolgo il token
-
-    res.status(200).json("logout effettuato"); //restituisco il nuovo token
-});
-*/
-
-/*
-//REFRESH DEL TOKEN
-app.post("/refresh", (req, res) => {
-    const vecchioToken = req.headers.token; //passo il token nel body della richiesta
-
-    if (!vecchioToken)
-        return res.status(401).json("non sei autenticato"); //se non cè il token
-    
-    if (!tokenValidi.includes(vecchioToken)) //se non è tra i token validi
-        return res.status(403).json('token non valido');
-
-
-    jwt.verify(vecchioToken, "chiaveSegreta", (err, user) => {
-        if (err)
-            return res.status(403).json('token non valido'); //il token è scaduto
-
-        //se il token è ancora valido ne creo uno nuovo e invalido quello vecchio
-        const nuovoToken = jwt.sign({id:user.id}, "chiaveSegreta", {expiresIn: "15m"});
-
-        tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== vecchioToken); //tolgo il vecchio token
-        tokenValidi.push(nuovoToken); //inserisco il nuovo token
-
-        res.status(200).json({"nuovoToken": nuovoToken}); //restituisco il nuovo token
-    });
-});
-
-
-
-
-function verifica (req, res, next)
-{
-    const token = req.headers.token; //il JWT lo metto nell'header della richiesta http e in questo mondo lo leggo
-    if (token) //controllo che il token sia presente
-    {
-        jwt.verify (token, "chiaveSegreta", (err, user) => { //controllo che il token sia valido
-            if (err) //controllo che il token sia valido
-            {
-                return res.status(403).json('token non valido');
-            }
-            else //se è tutto ok, setto la mail e vado avanti
-            {
-                if (!tokenValidi.includes(token)) //se non è tra i token validi
-                    return res.status(403).json('token non valido');
-                
-                req.user = user;
-                next();
-            }
-        });
-    }
-    else
-    {
-        res.status(401).json('non sei autenticato');
-    }
-}
-
-
-//toglie i token scaduti da tokenValidi
-function cancellaToken()
-{
-    for (let i = 0; i < tokenValidi.length; i++)
-    {
-        jwt.verify(tokenValidi[i], "chiaveSegreta", (err, user) => {
-            if (err)
-            {
-                tokenValidi = tokenValidi.filter((tokenInterni) => tokenInterni !== tokenValidi[i]); //tolgo il token scaduto
-                i = i-2;
-            }
-        });
-    }
-}
-
-setInterval(cancellaToken, 900000); //ogni 15 minuti, tolgo i token scaduti da tokenValidi
-
-*/
-
-
-
-
-/*
-app.get("/ciao", (req, res) => {
-    res.cookie('nome', 'negro', {secure: true, sameSite: "none"});
-    res.json("arrivati i biscotti2");
-});
-*/
-
-
+//VISUALIZZO I COOKIE
 app.get("/ciaoo", (req, res) => {
     console.log(req.cookies["jwt"]+" "+req.cookies["utente"]);
     res.json(req.cookies["jwt"]+" "+req.cookies["utente"]);

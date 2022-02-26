@@ -27,3 +27,5 @@ tsc --outDir ./API/build API/typescript/signup.ts;  #compila il file signup.ts d
 tsc --outDir ./API/build API/typescript/verifica.ts;  #compila il file verifica.ts delle api
 
 tsc --outDir ./API/build API/typescript/query.ts;  #compila il file query.ts delle api
+
+tsc --outDir ./API/build API/typescript/logout.ts;  #compila il file logout.ts delle api
