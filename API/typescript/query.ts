@@ -1,4 +1,4 @@
-declare function require (s:string);
+require('typescript-require');
 
 //GRPC
 //come per il server, deve conoscere il pacchetto e i servizi

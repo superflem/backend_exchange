@@ -1,4 +1,4 @@
-declare function require(stringa:string);
+require('typescript-require');
 
 function withdraw(call, callback)
 {

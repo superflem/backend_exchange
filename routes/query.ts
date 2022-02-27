@@ -1,5 +1,4 @@
-declare function require(stringa:string);
-
+require('typescript-require');
 
 function query (call, callback)
 {

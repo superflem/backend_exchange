@@ -1,5 +1,4 @@
-declare function require(name:string);
-
+require('typescript-require');
 const express = require ('express');
 const app = express();
 const db = require('./database.js');

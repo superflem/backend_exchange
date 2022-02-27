@@ -1,4 +1,4 @@
-declare function require(s: string);
+require('typescript-require');
 const jwt = require('jsonwebtoken');
 
 function verifica (req, res, next)

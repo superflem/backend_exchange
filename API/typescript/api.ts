@@ -1,4 +1,4 @@
-declare function require(name:string);
+require('typescript-require');
 
 const express = require ('express');
 const cookieParser = require('cookie-parser'); //permette di leggere i cookie

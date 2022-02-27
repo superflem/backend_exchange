@@ -1,5 +1,4 @@
-declare function require(name:string);
-
+require('typescript-require');
 const {Client} = require('pg');
 
 
