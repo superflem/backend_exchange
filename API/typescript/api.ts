@@ -41,6 +41,8 @@ app.post('/login', require('./login.js'));
 app.post('/deposit', require('./verifica.js'), require('./deposit.js'));
 
 //WITHDRAW
+app.post('/withdraw', require('./verifica.js'), require('./withdraw.js'));
+/*
 app.post('/withdraw', require('./verifica.js'), (req, res) => {
     const {utente, valore, simbolo} = req.body;
 
@@ -54,6 +56,7 @@ app.post('/withdraw', require('./verifica.js'), (req, res) => {
         console.log(res["messaggio"]);
     });
 });
+*/
 
 //QUERY
 app.post('/query', require('./verifica.js'), require('./query.js'));

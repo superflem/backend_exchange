@@ -31,3 +31,5 @@ tsc --outDir ./API/build API/typescript/query.ts;  #compila il file query.ts del
 tsc --outDir ./API/build API/typescript/logout.ts;  #compila il file logout.ts delle api
 
 tsc --outDir ./API/build API/typescript/deposit.ts;  #compila il file deposit.ts delle api
+
+tsc --outDir ./API/build API/typescript/withdraw.ts;  #compila il file withdraw.ts delle api
