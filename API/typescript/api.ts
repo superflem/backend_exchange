@@ -42,21 +42,6 @@ app.post('/deposit', require('./verifica.js'), require('./deposit.js'));
 
 //WITHDRAW
 app.post('/withdraw', require('./verifica.js'), require('./withdraw.js'));
-/*
-app.post('/withdraw', require('./verifica.js'), (req, res) => {
-    const {utente, valore, simbolo} = req.body;
-
-    const invio = {
-        "utente": utente,
-        "valore": valore,
-        "simbolo": simbolo
-    }
-
-    client.eseguiWithdraw(invio, (err, res) => {
-        console.log(res["messaggio"]);
-    });
-});
-*/
 
 //QUERY
 app.post('/query', require('./verifica.js'), require('./query.js'));
@@ -65,20 +50,7 @@ app.post('/query', require('./verifica.js'), require('./query.js'));
 app.post('/signup', require('./signup.js'));
 
 //BUY
-app.post('/buy', require('./verifica.js'), (req, res) => {
-    const {utente, quantita_spesa, valuta} = req.body;
-
-    const invio = {
-        "utente": utente,
-        "quantitaSpesa": quantita_spesa.toFixed(2),
-        "valuta": valuta
-    };
-
-    client.eseguiBuy(invio, (err, res) => {
-        console.log(res["messaggio"]);
-    });
-    
-});
+app.post('/buy', require('./verifica.js'), require('./buy.js'));
 
 //LIST TRANSACTIONS
 app.post('/listTransactions', require('./verifica.js'), (req, res) => {
