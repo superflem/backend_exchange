@@ -38,19 +38,7 @@ app.listen(80); //le api stanno in ascolto sulla porta 80
 app.post('/login', require('./login.js'));
 
 //DEPOSITO
-app.post('/deposit', require('./verifica.js'), (req, res) => {
-    const {utente, valore, simbolo} = req.body;
-
-    const invio = {
-        "utente": utente,
-        "valore": valore,
-        "simbolo": simbolo
-    }
-
-    client.eseguiDeposito(invio, (err, res) => {
-        console.log(res["messaggio"]);
-    });
-});
+app.post('/deposit', require('./verifica.js'), require('./deposit.js'));
 
 //WITHDRAW
 app.post('/withdraw', require('./verifica.js'), (req, res) => {
