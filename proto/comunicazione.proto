@@ -70,4 +70,5 @@ message risultatoQuery {
     float euro = 2; 
     float dollari = 3;
     string messaggio = 4;
+    string nome = 5;
 }

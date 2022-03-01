@@ -138,7 +138,7 @@ function eseguiBuy (call, callback)
                                             }
                                             else
                                             {
-                                                risposta["messaggio"] = "tutto ok";
+                                                risposta["messaggio"] = "Cambio valuta effettuato con successo";
                                                 risposta["isTuttoOk"] = true;
                                                 callback(null, risposta);
                                             }

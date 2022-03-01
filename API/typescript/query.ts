@@ -24,17 +24,6 @@ function query (req, response)
     };
 
     client.eseguiQuery(invio, (err, res) => {
-        /*
-        if (res["isTuttoOk"])
-        {
-            console.log('dollari: '+res['dollari']);
-            console.log('euro: '+res['euro']);
-        }
-        else
-        {
-            console.log('errore inatteso');
-        }
-        */
         response.status(200).json(JSON.stringify(res));
     });
 }

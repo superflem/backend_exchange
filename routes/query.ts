@@ -9,10 +9,11 @@ function query (call, callback)
         "isTuttoOk": false,
         "euro": 0,
         "dollari": 0,
-        "messaggio": "errore inatteso"
+        "messaggio": "errore inatteso",
+        "nome": ""
     };
 
-    const query = "SELECT dollari, euro FROM utente WHERE id_utente = '"+utente+"';";
+    const query = "SELECT dollari, euro, nome FROM utente WHERE id_utente = '"+utente+"';";
 
     db.query(query, (err, res) => {
         if (err) //controllo degli errori nella query
@@ -30,6 +31,7 @@ function query (call, callback)
             {
                 invio["euro"] = res.rows[0].euro;
                 invio["dollari"] = res.rows[0].dollari;
+                invio["nome"] = res.rows[0].nome;
                 invio["isTuttoOk"] = true;
                 invio["messaggio"] = "tutto ok";
 
