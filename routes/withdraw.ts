@@ -61,7 +61,7 @@ function withdraw(call, callback)
                 else //se ho abbastanza soldi, calcolo il nuovo valore e aggiorno il database
                 {
                     const nuovoConto = vecchioConto - valore;
-                    const queryModifica = 'UPDATE utente SET '+valuta+' = '+nuovoConto+' WHERE id_utente = '+utente+';';
+                    const queryModifica = 'UPDATE utente SET '+valuta+' = '+nuovoConto.toFixed(2)+' WHERE id_utente = '+utente+';';
                     db.query(queryModifica, (err, res) => {
                         if (err) //controllo gli errori nella query
                         {

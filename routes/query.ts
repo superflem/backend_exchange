@@ -29,8 +29,8 @@ function query (call, callback)
             }
             else //se tutto ok
             {
-                invio["euro"] = res.rows[0].euro;
-                invio["dollari"] = res.rows[0].dollari;
+                invio["euro"] = res.rows[0].euro.toFixed(2);
+                invio["dollari"] = res.rows[0].dollari.toFixed(2);
                 invio["nome"] = res.rows[0].nome;
                 invio["isTuttoOk"] = true;
                 invio["messaggio"] = "tutto ok";
