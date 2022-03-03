@@ -44,10 +44,20 @@ function listTransactions (req, response)
                 giorno = 1;
                 mese = mese+1;
             }
-            if (giorno == 31 && (mese == 11 || mese == 4 || mese == 6 || mese == 9)) //mesi da 30 giorni
+            else if (giorno == 31 && (mese == 11 || mese == 4 || mese == 6 || mese == 9)) //mesi da 30 giorni
             {
                 giorno = 1;
                 mese = mese+1;
+            }
+            else if (giorno == 30 && mese == 2) //febbraio
+            {
+                giorno = 1;
+                mese = 3;
+            }
+            else if (giorno == 29 && mese == 2 && anno%4 != 0) //febbraio bisestile
+            {
+                giorno = 1;
+                mese = 3;;
             }
             //controllo sul mese
             if (mese == 13)
