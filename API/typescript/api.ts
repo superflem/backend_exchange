@@ -53,6 +53,8 @@ app.post('/signup', require('./signup.js'));
 app.post('/buy', require('./verifica.js'), require('./buy.js'));
 
 //LIST TRANSACTIONS
+app.post('/listTransactions', require('./verifica.js'), require('./listTransactions.js'))
+/*
 app.post('/listTransactions', require('./verifica.js'), (req, res) => {
     const {utente, valuta, data} = req.body;
 
@@ -68,14 +70,14 @@ app.post('/listTransactions', require('./verifica.js'), (req, res) => {
         //traduco da stringa a json se non ci sono errori
         if (res["isTuttoOk"])
         {
-            /*
-            const oggettoJson = JSON.parse(res["listaTransizioni"]);
-            console.log(oggettoJson[0]["quantita_spesa"]);
-            */
+            
+            //const oggettoJson = JSON.parse(res["listaTransizioni"]);
+            //console.log(oggettoJson[0]["quantita_spesa"]);
            console.log(JSON.parse(res["listaTransizioni"]));
         }
     });
 });
+*/
 
 //LOGOUT
 app.post("/logout", require('./logout.js'));
