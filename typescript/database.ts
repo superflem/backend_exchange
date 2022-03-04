@@ -1,14 +1,13 @@
 require('typescript-require');
+require('dotenv').config({ path: __dirname+'/./../.env'}); //prendo le informazio del database nel file .env
 const {Client} = require('pg');
 
-
-
 const db = new Client ({
-    host: 'localhost',
-    user: 'postgres',
-    port: 5432, //questa è la porta di default di postres
-    password: 'giuseppe-28',
-    database: 'exchange_db'
+    host: process.env.HOST,
+    user: process.env.UTENTE,
+    port: process.env.PORT, 
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 });
 
 
