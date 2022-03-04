@@ -3,7 +3,7 @@
 Il file database.ts effettua una connessione al database e restituisce la variabile db che permetterà di eseguire delle query.\
 Il file server_users.ts crea un server in ascolto sulla porta 9001 che esegue i servizi dell'utente come signup, deposit eccetera.\
 Il file exchange.ts crea un server in ascolto sulla porta 9000 che effettua il cambio di valuta.\
-Il file api.ts crea un server in ascolto sulla porta 80 che riceve le richieste da internet e le smista nei giusti server.\
+Il file api.ts crea un server in ascolto sulla porta 80 che riceve le richieste da internet e le smista nei giusti server.
 
 È presente il file exchange_db.sql che contiene il backup del database ed un file database.txt che contiene il codice SQL per 
 creare le tabelle necessarie (bisogna modificare il file .env in base alle proprie credenziali)
