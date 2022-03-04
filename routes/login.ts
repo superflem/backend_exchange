@@ -1,5 +1,6 @@
 require('typescript-require');
 
+require('dotenv').config({ path: __dirname+'/./../.env'});
 function eseguiLogin(call, callback)
 {
     const db = require('./database.js');
@@ -30,7 +31,7 @@ function eseguiLogin(call, callback)
             }
             else //se trovo l'utente lo loggo
             {
-                const accessToken = jwt.sign({id:res.rows.id_utente}, "chiaveSegreta", {expiresIn: "15m"}); //creo il token con la chiave "chiaveSegreta" che rimane valido per 15 min
+                const accessToken = jwt.sign({id:res.rows.id_utente}, process.env.SEGRETA, {expiresIn: "15m"}); //creo il token con la chiave "chiaveSegreta" che rimane valido per 15 min
 
                 risposta["isTuttoOk"] = true;
                 risposta["token"] = accessToken;

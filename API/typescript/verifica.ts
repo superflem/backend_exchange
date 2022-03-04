@@ -1,6 +1,8 @@
 require('typescript-require');
 const jwt = require('jsonwebtoken');
 
+require('dotenv').config({ path: __dirname+'/./../../.env'}); //importo le variabili d'ambiente
+
 function verifica (req, res, next)
 {
     let token = req.cookies["jwt"];
@@ -19,7 +21,7 @@ function verifica (req, res, next)
             res.status(301).json(JSON.stringify({"ridirezione": true}));
         }
 
-        jwt.verify(token, "chiaveSegreta", (err, user) => {
+        jwt.verify(token, process.env.SEGRETA, (err, user) => {
             if (!err)
             {
                 next();

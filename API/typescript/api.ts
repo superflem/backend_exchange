@@ -32,7 +32,6 @@ const client = new comunicazionePackage.ComunicazioneServer("localhost:9001", gr
 
 app.listen(80); //le api stanno in ascolto sulla porta 80
 
-//VERIFICO IL TOKEN
 
 //LOGIN
 app.post('/login', require('./login.js'));
