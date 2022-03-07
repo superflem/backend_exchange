@@ -12,7 +12,7 @@ creare le tabelle necessarie (bisogna modificare il file .env in base alle propr
 
 Nella cartella del progetto si può eseguire:
 
-### `npm init`
+### `npm install`
 Installa tutti i moduli necessari per eseguire i file
 
 ### `npm run build`
