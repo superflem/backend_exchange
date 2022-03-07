@@ -3,13 +3,6 @@ require('dotenv').config({ path: __dirname+'/./../.env'}); //prendo le informazi
 const {Client} = require('pg');
 
 const db = new Client ({
-    /*
-    host: process.env.HOST,
-    user: process.env.UTENTE,
-    port: process.env.PORT, 
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-    */
     host: "db",
     user: "docker",
     password: "giuseppe-28",
@@ -23,7 +16,6 @@ db.connect(err => {
         console.log(err);
     else // se non ci sono le tabelle, le creo
     {
-        console.log('ciao');
         db.query("select * from utente", (err, res) => {
             if (err) //creo la tabella utente che non esiste
             {
